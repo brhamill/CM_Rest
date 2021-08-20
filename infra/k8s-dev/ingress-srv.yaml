@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: eval.dev
+      http:
+        paths:
+          - pathType: Prefix
+            path: '/?(.*)'
+            backend:
+              service:
+                name: express-srv
+                port:
+                  number: 3000

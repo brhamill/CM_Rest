@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: express
+  template:
+    metadata:
+      labels:
+        app: express
+    spec:
+      containers:
+        - name: express
+          image: brhamill/express
+          env:
+            - name: POSTGRES_DB
+              value: express-ts
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_HOST
+              value: 'postgres://postgres:postgres@postgres-srv:5432/express-ts'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: express-srv
+spec:
+  selector:
+    app: express
+  ports:
+    - name: express
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
